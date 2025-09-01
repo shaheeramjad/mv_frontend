@@ -4,6 +4,7 @@ import Footer from "../components/Layouts/Footer";
 import Header from "../components/Layouts/Header";
 import ProductDetails from "../components/Products/ProductDetails";
 import { productData } from "../static/data";
+import SuggestedProduct from "../components/Products/SuggestedProduct";
 
 const ProductsDetailPage = () => {
   // const { allProducts } = useSelector((state) => state.products);
@@ -33,7 +34,7 @@ const ProductsDetailPage = () => {
     <div>
       <Header />
       <ProductDetails data={data} />
-      {/* {!eventData && <>{data && <SuggestedProduct data={data} />}</>} */}
+      {data && <SuggestedProduct data={data} />}
       <Footer />
     </div>
   );
