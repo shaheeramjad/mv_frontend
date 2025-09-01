@@ -13,6 +13,8 @@ import { useSelector } from "react-redux";
 import { productData, categoriesData } from "../../static/data.jsx";
 import DropDown from "./DropDown.jsx";
 import Navbar from "./Navbar.jsx";
+import Cart from "../Cart/Cart.jsx";
+import Wishlist from "../Wishlist/Wishlist.jsx";
 import { backendUrl } from "../../server.js";
 
 const Header = ({ activeHeading }) => {
@@ -189,6 +191,13 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
             </div>
+            {/* cart popup */}
+            {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+            {/* wishlist popup */}
+            {openWishlist ? (
+              <Wishlist setOpenWishlist={setOpenWishlist} />
+            ) : null}
           </div>
         </div>
       </div>
