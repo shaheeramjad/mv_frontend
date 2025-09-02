@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/style.js";
+import { categoriesData, productData } from "../../static/data";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -9,18 +10,18 @@ import {
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
+import DropDown from "./DropDown";
+import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
-import { productData, categoriesData } from "../../static/data.jsx";
-import DropDown from "./DropDown.jsx";
-import Navbar from "./Navbar.jsx";
-import Cart from "../Cart/Cart.jsx";
-import Wishlist from "../Wishlist/Wishlist.jsx";
 import { RxCross1 } from "react-icons/rx";
 import { backendUrl } from "../../server.js";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
-  //const { wishlist } = useSelector((state) => state.wishlist);
+  const { isSeller } = useSelector((state) => state.seller);
+  // const { wishlist } = useSelector((state) => state.wishlist);
+  // const { cart } = useSelector((state) => state.cart);
+  const { allProducts } = useSelector((state) => state.products);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -34,41 +35,34 @@ const Header = ({ activeHeading }) => {
     setSearchTerm(term);
 
     const filteredProducts =
-      productData?.filter((product) =>
+      allProducts &&
+      allProducts.filter((product) =>
         product.name.toLowerCase().includes(term.toLowerCase())
-      ) || [];
-
+      );
     setSearchData(filteredProducts);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 70) {
-        setActive(true);
-      } else {
-        setActive(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 70) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  });
 
   return (
     <>
       <div className={`${styles.section}`}>
-        <div className="hidden md:flex md:h-[50px] md:my-[20px] items-center justify-between">
-          {/* Logo */}
+        <div className="hidden md:h-[50px] md:my-[20px] md:flex items-center justify-between">
           <div>
             <Link to="/">
               <img
                 src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="Logo"
+                alt=""
               />
             </Link>
           </div>
-
-          {/* Search Box */}
+          {/* search box */}
           <div className="w-[50%] relative">
             <input
               type="text"
@@ -81,46 +75,46 @@ const Header = ({ activeHeading }) => {
               size={30}
               className="absolute right-2 top-1.5 cursor-pointer"
             />
-
-            {searchData && searchData.length !== 0 && (
+            {searchData && searchData.length !== 0 ? (
               <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
-                {searchData.map((i) => (
-                  <Link to={`/product/${i.id}`} key={i.id}>
-                    <div className="w-full flex items-start py-3">
-                      <img
-                        src={i.image_Url[0].url}
-                        alt={i.name}
-                        className="w-[40px] h-[40px] mr-[10px]"
-                      />
-                      <h1>{i.name}</h1>
-                    </div>
-                  </Link>
-                ))}
+                {searchData &&
+                  searchData.map((i, index) => {
+                    return (
+                      <Link to={`/product/${i._id}`}>
+                        <div className="w-full flex items-start-py-3">
+                          <img
+                            src={`${backendUrl}${i.images[0]?.url}`}
+                            alt=""
+                            className="w-[40px] h-[40px] mr-[10px]"
+                          />
+                          <h1>{i.name}</h1>
+                        </div>
+                      </Link>
+                    );
+                  })}
               </div>
-            )}
+            ) : null}
           </div>
 
-          {/* Seller Button */}
           <div className={`${styles.button}`}>
-            <Link to={`/shop-create`}>
+            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
               <h1 className="text-[#fff] flex items-center">
-                Become Seller <IoIosArrowForward className="ml-1" />
+                {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
+                <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
           </div>
         </div>
       </div>
-
-      {/* Navbar Section */}
       <div
         className={`${
-          active ? "shadow-sm fixed top-0 left-0 z-10" : ""
+          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
         } transition hidden md:flex items-center justify-between w-full bg-[#3321c8] h-[70px]`}
       >
         <div
           className={`${styles.section} relative ${styles.normalFlex} justify-between`}
         >
-          {/* Categories */}
+          {/* categories */}
           <div onClick={() => setDropDown(!dropDown)}>
             <div className="relative h-[60px] mt-[10px] w-[270px] hidden lg:block">
               <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
@@ -134,24 +128,24 @@ const Header = ({ activeHeading }) => {
                 className="absolute right-2 top-4 cursor-pointer"
                 onClick={() => setDropDown(!dropDown)}
               />
-              {dropDown && (
+              {dropDown ? (
                 <DropDown
                   categoriesData={categoriesData}
                   setDropDown={setDropDown}
                 />
-              )}
+              ) : null}
             </div>
           </div>
-
-          {/* Navbar */}
+          {/* navitems */}
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
           </div>
+
           <div className="flex">
             <div className={`${styles.normalFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
-                onClick={() => setOpenWishlist(true)}
+                //onClick={() => setOpenWishlist(true)}
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
@@ -192,6 +186,7 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
             </div>
+
             {/* cart popup */}
             {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
 
@@ -202,6 +197,7 @@ const Header = ({ activeHeading }) => {
           </div>
         </div>
       </div>
+
       {/* mobile header */}
       <div
         className={`${
@@ -232,8 +228,8 @@ const Header = ({ activeHeading }) => {
               onClick={() => setOpenCart(true)}
             >
               <AiOutlineShoppingCart size={30} />
-              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                {/* {cart && cart.length} */} 0
+              <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                {/* {cart && cart.length} */}0
               </span>
             </div>
           </div>
@@ -257,8 +253,8 @@ const Header = ({ activeHeading }) => {
                     onClick={() => setOpenWishlist(true) || setOpen(false)}
                   >
                     <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                    <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                      {Wishlist && Wishlist.length}
+                    <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                      {/* {wishlist && wishlist.length} */}0
                     </span>
                   </div>
                 </div>
@@ -287,7 +283,7 @@ const Header = ({ activeHeading }) => {
                         <Link to={`/product/${Product_name}`}>
                           <div className="flex items-center">
                             <img
-                              src={i.image_Url[0]?.url}
+                              src={`${backendUrl}${i.images[0]?.url}`}
                               alt=""
                               className="w-[50px] mr-2"
                             />
@@ -302,9 +298,10 @@ const Header = ({ activeHeading }) => {
 
               <Navbar active={activeHeading} />
               <div className={`${styles.button} ml-4 !rounded-[4px]`}>
-                <Link to="/shop-create">
+                <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
                   <h1 className="text-[#fff] flex items-center">
-                    Become Seller <IoIosArrowForward className="ml-1" />
+                    {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
+                    <IoIosArrowForward className="ml-1" />
                   </h1>
                 </Link>
               </div>
@@ -317,7 +314,7 @@ const Header = ({ activeHeading }) => {
                   <div>
                     <Link to="/profile">
                       <img
-                        src={`${backendUrl}uploads/${user?.avatar?.url}`}
+                        src={`${backendUrl}uploads/${user.avatar?.url}`}
                         alt=""
                         className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
                       />

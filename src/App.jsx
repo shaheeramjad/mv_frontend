@@ -15,83 +15,136 @@ import {
   SellerActivationPage,
   ShopLoginPage,
 } from "../src/routes/Routes.js";
-import { ShopHomePage } from "../src/routes/ShopRoutes.js";
+import {
+  ShopHomePage,
+  ShopDashboardPage,
+  ShopCreateProduct,
+  ShopAllProducts,
+  ShopCreateEvents,
+  ShopAllEvents,
+  ShopAllCoupons,
+  ShopPreviewPage,
+} from "../src/routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import store from "./redux/store.js";
 import { loadSeller, loadUser } from "./redux/actions/user.js";
-import { useSelector } from "react-redux";
+import { getAllProducts } from "./redux/actions/product.js";
+import { getAllEvents } from "./redux/actions/event.js";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
 
 const App = () => {
-  const { loading, isAuthenticated } = useSelector((state) => state.user);
-  const { isLoading, seller, isSeller } = useSelector((state) => state.seller);
   useEffect(() => {
     store.dispatch(loadUser());
     store.dispatch(loadSeller());
+    store.dispatch(getAllProducts());
+    store.dispatch(getAllEvents());
   }, []);
 
   return (
     <>
-      {loading || isLoading ? (
-        <div className="w-full h-screen flex items-center justify-center">
-          <h1 className="text-xl font-semibold">Loading...</h1>
-        </div>
-      ) : (
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/sign-up" element={<SignupPage />} />
-            <Route
-              path="/activation/:activation_token"
-              element={<ActivationPage />}
-            />
-            <Route
-              path="seller/activation/:activation_token"
-              element={<SellerActivationPage />}
-            />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/product/:name" element={<ProductsDetailPage />} />
-            <Route path="/best-selling" element={<BestSellingPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoutes isAuthenticated={isAuthenticated}>
-                  <ProfilePage />
-                </ProtectedRoutes>
-              }
-            />
-            {/* Shop Routes */}
-            <Route path="/shop-create" element={<ShopCreatePage />} />
-            <Route path="/shop-login" element={<ShopLoginPage />} />
-            <Route
-              path="/shop/:id"
-              element={
-                <SellerProtectedRoute>
-                  <ShopHomePage />
-                </SellerProtectedRoute>
-              }
-            />
-          </Routes>
-
-          <ToastContainer
-            position="bottom-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/sign-up" element={<SignupPage />} />
+          <Route
+            path="/activation/:activation_token"
+            element={<ActivationPage />}
           />
-        </BrowserRouter>
-      )}
+          <Route
+            path="seller/activation/:activation_token"
+            element={<SellerActivationPage />}
+          />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/product/:id" element={<ProductsDetailPage />} />
+          <Route path="/best-selling" element={<BestSellingPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoutes>
+                <ProfilePage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
+          {/* Shop Routes */}
+          <Route path="/shop-create" element={<ShopCreatePage />} />
+          <Route path="/shop-login" element={<ShopLoginPage />} />
+          <Route
+            path="/shop/:id"
+            element={
+              <SellerProtectedRoute>
+                <ShopHomePage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <SellerProtectedRoute>
+                <ShopDashboardPage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-create-product"
+            element={
+              <SellerProtectedRoute>
+                <ShopCreateProduct />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-products"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllProducts />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-create-event"
+            element={
+              <SellerProtectedRoute>
+                <ShopCreateEvents />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-events"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllEvents />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-coupons"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllCoupons />
+              </SellerProtectedRoute>
+            }
+          />
+        </Routes>
+
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      </BrowserRouter>
     </>
   );
 };

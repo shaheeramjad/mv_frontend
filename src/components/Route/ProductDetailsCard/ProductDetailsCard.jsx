@@ -8,11 +8,15 @@ import {
 import { RxCross1 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/style.js";
+import { backendUrl } from "../../../server.js";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
+  // const { cart } = useSelector((state) => state.cart);
+  // const { wishlist } = useSelector((state) => state.wishlist);
+  // const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
-  //  const [select, setSelect] = useState(false);
+  //   const [select, setSelect] = useState(false);
 
   const handleMessageSubmit = () => {};
 
@@ -25,6 +29,40 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const incrementCount = () => {
     setCount(count + 1);
   };
+
+  // const addToCartHandler = (id) => {
+  //   const isItemExists = cart && cart.find((i) => i._id === id);
+  //   if (isItemExists) {
+  //     toast.error("Item already in cart!");
+  //   } else {
+  //     if (data.stock < count) {
+  //       toast.error("Product stock limited!");
+  //     } else {
+  //       const cartData = { ...data, qty: count };
+  //       dispatch(addTocart(cartData));
+  //       toast.success("Item added to cart successfully!");
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (wishlist && wishlist.find((i) => i._id === data._id)) {
+  //     setClick(true);
+  //   } else {
+  //     setClick(false);
+  //   }
+  // }, [wishlist]);
+
+  // const removeFromWishlistHandler = (data) => {
+  //   setClick(!click);
+  //   dispatch(removeFromWishlist(data));
+  // };
+
+  // const addToWishlistHandler = (data) => {
+  //   setClick(!click);
+  //   dispatch(addToWishlist(data));
+  // };
+
   return (
     <div className="bg-[#fff]">
       {data ? (
@@ -35,13 +73,17 @@ const ProductDetailsCard = ({ setOpen, data }) => {
               className="absolute right-3 top-3 z-50"
               onClick={() => setOpen(false)}
             />
+
             <div className="block w-full md:flex">
               <div className="w-full md:w-[50%]">
-                <img src={`${data.image_Url[0]?.url}`} alt="" />
+                <img
+                  src={`${backendUrl}${data.images && data.images[0]?.url}`}
+                  alt=""
+                />
                 <div className="flex">
                   <Link to={`/shop/preview/${data.shop._id}`} className="flex">
                     <img
-                      src={`${data.shop.shop_avatar.url}`}
+                      src={`${backendUrl}${data.images && data.images[0]?.url}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
@@ -50,7 +92,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                         {data.shop.name}
                       </h3>
                       <h5 className="pb-3 text-[15px]">
-                        {data.shop.ratings} Ratings
+                        {data?.ratings} Ratings
                       </h5>
                     </div>
                   </Link>
@@ -71,12 +113,13 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   {data.name}
                 </h1>
                 <p>{data.description}</p>
+
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discount_price}$
+                    {data.discountPrice}$
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.price ? data.price + "$" : null}
+                    {data.originalPrice ? data.originalPrice + "$" : null}
                   </h3>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
@@ -102,7 +145,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                       <AiFillHeart
                         size={30}
                         className="cursor-pointer"
-                        onClick={() => removeFromWishlistHandler(data)}
+                        //onClick={() => removeFromWishlistHandler(data)}
                         color={click ? "red" : "#333"}
                         title="Remove from wishlist"
                       />
@@ -110,7 +153,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                       <AiOutlineHeart
                         size={30}
                         className="cursor-pointer"
-                        onClick={() => addToWishlistHandler(data)}
+                        //onClick={() => addToWishlistHandler(data)}
                         title="Add to wishlist"
                       />
                     )}
@@ -118,7 +161,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 </div>
                 <div
                   className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}
-                  onClick={() => addToCartHandler(data._id)}
+                  //onClick={() => addToCartHandler(data._id)}
                 >
                   <span className="text-[#fff] flex items-center">
                     Add to cart <AiOutlineShoppingCart className="ml-1" />
