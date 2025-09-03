@@ -4,38 +4,23 @@ import { BsCartPlus } from "react-icons/bs";
 import styles from "../../styles/style.js";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
+import { removeFromWishlistAsync } from "../../redux/actions/wishlist";
+import { addToCartAsync } from "../../redux/actions/cart";
+import { backendUrl } from "../../server.js";
 
 const Wishlist = ({ setOpenWishlist }) => {
-  // const { wishlist } = useSelector((state) => state.wishlist);
-  // const dispatch = useDispatch();
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const dispatch = useDispatch();
 
-  // const removeFromWishlistHandler = (data) => {
-  //   dispatch(removeFromWishlist(data));
-  // };
+  const removeFromWishlistHandler = (data) => {
+    dispatch(removeFromWishlistAsync(data));
+  };
 
-  // const addToCartHandler = (data) => {
-  //   const newData = { ...data, qty: 1 };
-  //   dispatch(addTocart(newData));
-  //   setOpenWishlist(false);
-  // };
-
-  const wishlist = [
-    {
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 29.99,
-    },
-    {
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 29.99,
-    },
-    {
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 29.99,
-    },
-  ];
+  const addToCartHandler = (data) => {
+    const newData = { ...data, qty: 1 };
+    dispatch(addToCartAsync(newData));
+    setOpenWishlist(false);
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
@@ -77,8 +62,8 @@ const Wishlist = ({ setOpenWishlist }) => {
                     <CartSingle
                       key={index}
                       data={i}
-                      //removeFromWishlistHandler={removeFromWishlistHandler}
-                      //addToCartHandler={addToCartHandler}
+                      removeFromWishlistHandler={removeFromWishlistHandler}
+                      addToCartHandler={addToCartHandler}
                     />
                   ))}
               </div>
@@ -92,17 +77,17 @@ const Wishlist = ({ setOpenWishlist }) => {
 
 const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
   const [value, setValue] = useState(1);
-  const totalPrice = data.price * value;
+  const totalPrice = data.discountPrice * value;
 
   return (
     <div className="border-b p-4">
       <div className="w-full md:flex items-center">
         <RxCross1
           className="cursor-pointer md:mb-['unset'] md:ml-['unset'] mb-2 ml-2"
-          //onClick={() => removeFromWishlistHandler(data)}
+          onClick={() => removeFromWishlistHandler(data)}
         />
         <img
-          src="https://img.drz.lazcdn.com/static/pk/p/1620e6c28f06e9eac36857e1cbc41838.jpg_200x200q80.avif"
+          src={`${backendUrl}${data?.images[0]?.url}`}
           alt=""
           className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
         />
@@ -118,7 +103,7 @@ const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
             size={20}
             className="cursor-pointer"
             tile="Add to cart"
-            //onClick={() => addToCartHandler(data)}
+            onClick={() => addToCartHandler(data)}
           />
         </div>
       </div>

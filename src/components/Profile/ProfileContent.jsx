@@ -5,27 +5,71 @@ import {
   AiOutlineDelete,
 } from "react-icons/ai";
 import { MdTrackChanges } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "../../styles/style";
 import { backendUrl } from "../../server";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { RxCross1 } from "react-icons/rx";
+import {
+  deleteUserAddress,
+  loadUser,
+  updateUserAddress,
+  updateUserInformation,
+} from "../../redux/actions/user";
+import { Country, State } from "country-state-city";
+import axios from "axios";
+import { server } from "../../server";
+import { getAllOrdersOfUser } from "../../redux/actions/order";
 
 const ProfileContent = ({ active }) => {
+  const dispatch = useDispatch();
   const { user, error, successMessage } = useSelector((state) => state.user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
-  const handleImage = (e) => {
+
+  const handleImage = async (e) => {
     const file = e.target.files[0];
-    // Handle image upload
+    setAvatar(file);
+
+    const formData = new FormData();
+
+    formData.append("image", e.target.files[0]);
+
+    await axios
+      .put(`${server}/user/update-avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        toast.error(error);
+        console.log(error);
+      });
   };
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearErrors" });
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch({ type: "clearMessages" });
+    }
+  }, [error, successMessage]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
+    dispatch(updateUserInformation(name, email, phoneNumber, password));
   };
   return (
     <div className="w-full">
@@ -152,20 +196,11 @@ const ProfileContent = ({ active }) => {
 
 const AllOrders = () => {
   const { user } = useSelector((state) => state.user);
-  //const { orders } = useSelector((state) => state.order);
-  //const dispatch = useDispatch();
-
-  const orders = [
-    {
-      _id: "1",
-      cart: [{ product: "Product 1", quantity: 2 }],
-      totalPrice: 100,
-      status: "Delivered",
-    },
-  ];
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    //dispatch(getAllOrdersOfUser(user._id));
+    dispatch(getAllOrdersOfUser(user._id));
   }, []);
 
   const columns = [
@@ -176,12 +211,11 @@ const AllOrders = () => {
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      // cellClassName: (params) => {
-      //   return params.getValue(params.id, "status") === "Delivered"
-      //     ? "greenColor"
-      //     : "redColor";
-      // },
+      cellClassName: (params) => {
+        return params.value === "Delivered" ? "greenColor" : "redColor";
+      },
     },
+
     {
       field: "itemsQty",
       headerName: "Items Qty",
@@ -246,26 +280,11 @@ const AllOrders = () => {
 
 const AllRefundOrders = () => {
   const { user } = useSelector((state) => state.user);
-  //const { orders } = useSelector((state) => state.order);
-  //const dispatch = useDispatch();
-
-  const orders = [
-    {
-      _id: "1",
-      cart: [{ product: "Product 1", quantity: 2 }],
-      totalPrice: 100,
-      status: "Delivered",
-    },
-    {
-      _id: "2",
-      cart: [{ product: "Product 2", quantity: 1 }],
-      totalPrice: 50,
-      status: "Processing refund",
-    },
-  ];
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    //dispatch(getAllOrdersOfUser(user._id));
+    dispatch(getAllOrdersOfUser(user._id));
   }, []);
 
   const eligibleOrders =
@@ -279,12 +298,11 @@ const AllRefundOrders = () => {
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      // cellClassName: (params) => {
-      //   return params.getValue(params.id, "status") === "Delivered"
-      //     ? "greenColor"
-      //     : "redColor";
-      // },
+      cellClassName: (params) => {
+        return params.value === "Delivered" ? "greenColor" : "redColor";
+      },
     },
+
     {
       field: "itemsQty",
       headerName: "Items Qty",
@@ -349,32 +367,11 @@ const AllRefundOrders = () => {
 
 const TrackOrder = () => {
   const { user } = useSelector((state) => state.user);
-  // const { orders } = useSelector((state) => state.order);
-  // const dispatch = useDispatch();
-
-  const orders = [
-    {
-      _id: "1",
-      cart: [{ product: "Product 1", quantity: 2 }],
-      totalPrice: 100,
-      status: "Delivered",
-    },
-    {
-      _id: "2",
-      cart: [{ product: "Product 2", quantity: 1 }],
-      totalPrice: 50,
-      status: "Pending",
-    },
-    {
-      _id: "3",
-      cart: [{ product: "Product 3", quantity: 1 }],
-      totalPrice: 30,
-      status: "Processing refund",
-    },
-  ];
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    //dispatch(getAllOrdersOfUser(user._id));
+    dispatch(getAllOrdersOfUser(user._id));
   }, []);
 
   const columns = [
@@ -385,12 +382,11 @@ const TrackOrder = () => {
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      // cellClassName: (params) => {
-      //   return params.getValue(params.id, "status") === "Delivered"
-      //     ? "greenColor"
-      //     : "redColor";
-      // },
+      cellClassName: (params) => {
+        return params.value === "Delivered" ? "greenColor" : "redColor";
+      },
     },
+
     {
       field: "itemsQty",
       headerName: "Items Qty",
@@ -539,7 +535,7 @@ const Address = () => {
   const [address2, setAddress2] = useState("");
   const [addressType, setAddressType] = useState("");
   const { user } = useSelector((state) => state.user);
-  //const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const addressTypeData = [
     {
@@ -559,16 +555,16 @@ const Address = () => {
     if (addressType === "" || country === "" || city === "") {
       toast.error("Please fill all the fields!");
     } else {
-      // dispatch(
-      //   updatUserAddress(
-      //     country,
-      //     city,
-      //     address1,
-      //     address2,
-      //     zipCode,
-      //     addressType
-      //   )
-      // );
+      dispatch(
+        updateUserAddress(
+          country,
+          city,
+          address1,
+          address2,
+          zipCode,
+          addressType
+        )
+      );
       setOpen(false);
       setCountry("");
       setCity("");
@@ -581,7 +577,7 @@ const Address = () => {
 
   const handleDelete = (item) => {
     const id = item._id;
-    // dispatch(deleteUserAddress(id));
+    dispatch(deleteUserAddress(id));
   };
 
   return (

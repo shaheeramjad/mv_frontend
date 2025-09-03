@@ -14,6 +14,11 @@ import {
   ShopCreatePage,
   SellerActivationPage,
   ShopLoginPage,
+  CheckoutPage,
+  PaymentPage,
+  OrderSuccessPage,
+  OrderDetailsPage,
+  TrackOrderPage,
 } from "../src/routes/Routes.js";
 import {
   ShopHomePage,
@@ -26,20 +31,31 @@ import {
   ShopPreviewPage,
 } from "../src/routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import store from "./redux/store.js";
 import { loadSeller, loadUser } from "./redux/actions/user.js";
 import { getAllProducts } from "./redux/actions/product.js";
 import { getAllEvents } from "./redux/actions/event.js";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
+import axios from "axios";
+import { server } from "./server.js";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const App = () => {
+  const [stripeApiKey, setStripeApiKey] = useState("");
+
+  async function getStripeApiKey() {
+    const { data } = await axios.get(`${server}/payment/stripeApiKey`);
+    setStripeApiKey(data.stripeApiKey);
+  }
   useEffect(() => {
     store.dispatch(loadUser());
     store.dispatch(loadSeller());
     store.dispatch(getAllProducts());
     store.dispatch(getAllEvents());
+    getStripeApiKey();
   }, []);
 
   return (
@@ -63,10 +79,49 @@ const App = () => {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route
+            path="/payment"
+            element={
+              <ProtectedRoutes>
+                {stripeApiKey ? (
+                  <Elements stripe={loadStripe(stripeApiKey)}>
+                    <PaymentPage />
+                  </Elements>
+                ) : (
+                  <div>Loading payment gateway...</div>
+                )}
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoutes>
+                <CheckoutPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
             path="/profile"
             element={
               <ProtectedRoutes>
                 <ProfilePage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route path="/order/success" element={<OrderSuccessPage />} />
+          <Route
+            path="/user/order/:id"
+            element={
+              <ProtectedRoutes>
+                <OrderDetailsPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/user/track/order/:id"
+            element={
+              <ProtectedRoutes>
+                <TrackOrderPage />
               </ProtectedRoutes>
             }
           />

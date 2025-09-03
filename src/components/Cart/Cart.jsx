@@ -4,44 +4,27 @@ import { IoBagHandleOutline } from "react-icons/io5";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/style.js";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartAsync, removeFromCartAsync } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
+import { backendUrl } from "../../server.js";
 
 const Cart = ({ setOpenCart }) => {
-  //const { cart } = useSelector((state) => state.cart);
-  // const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
-  // const removeFromCartHandler = (data) => {
-  //   dispatch(removeFromCart(data));
-  // };
+  const removeFromCartHandler = (data) => {
+    dispatch(removeFromCartAsync(data));
+  };
 
-  // const totalPrice = cart.reduce(
-  //   (acc, item) => acc + item.qty * item.discountPrice,
-  //   0
-  // );
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.qty * item.discountPrice,
+    0
+  );
 
-  const totalPrice = 5000;
-
-  // const quantityChangeHandler = (data) => {
-  //   dispatch(addTocart(data));
-  // };
-
-  const cart = [
-    {
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 29.99,
-    },
-    {
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 29.99,
-    },
-    {
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 29.99,
-    },
-  ];
+  const quantityChangeHandler = (data) => {
+    dispatch(addToCartAsync(data));
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
@@ -83,8 +66,8 @@ const Cart = ({ setOpenCart }) => {
                     <CartSingle
                       key={index}
                       data={i}
-                      //quantityChangeHandler={quantityChangeHandler}
-                      //removeFromCartHandler={removeFromCartHandler}
+                      quantityChangeHandler={quantityChangeHandler}
+                      removeFromCartHandler={removeFromCartHandler}
                     />
                   ))}
               </div>
@@ -110,23 +93,23 @@ const Cart = ({ setOpenCart }) => {
 };
 
 const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
-  const [value, setValue] = useState(0);
-  const totalPrice = data.price * value;
+  const [value, setValue] = useState(data.qty);
+  const totalPrice = data.discountPrice * value;
 
   const increment = (data) => {
-    // if (data.stock < value) {
-    //   toast.error("Product stock limited!");
-    // } else {
-    setValue(value + 1);
-    // const updateCartData = { ...data, qty: value + 1 };
-    // quantityChangeHandler(updateCartData);
-    //}
+    if (data.stock < value) {
+      toast.error("Product stock limited!");
+    } else {
+      setValue(value + 1);
+      const updateCartData = { ...data, qty: value + 1 };
+      quantityChangeHandler(updateCartData);
+    }
   };
 
   const decrement = (data) => {
     setValue(value === 1 ? 1 : value - 1);
-    // const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
-    // quantityChangeHandler(updateCartData);
+    const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
+    quantityChangeHandler(updateCartData);
   };
 
   return (
@@ -139,7 +122,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           >
             <HiPlus size={18} color="#fff" />
           </div>
-          <span className="pl-[10px]">{value}</span>
+          <span className="pl-[10px]">{data.qty}</span>
           <div
             className="bg-[#a7abb14f] rounded-full w-[25px] h-[25px] flex items-center justify-center cursor-pointer"
             onClick={() => decrement(data)}
@@ -148,14 +131,14 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         <img
-          src="https://img.drz.lazcdn.com/static/pk/p/1620e6c28f06e9eac36857e1cbc41838.jpg_200x200q80.avif"
+          src={`${backendUrl}${data?.images[0]?.url}`}
           alt=""
           className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
         />
         <div className="pl-[5px]">
           <h1>{data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
-            ${data.price} * {value}
+            ${data.discountPrice} * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
             US${totalPrice}
@@ -163,7 +146,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
         </div>
         <RxCross1
           className="cursor-pointer"
-          //onClick={() => removeFromCartHandler(data)}
+          onClick={() => removeFromCartHandler(data)}
         />
       </div>
     </div>

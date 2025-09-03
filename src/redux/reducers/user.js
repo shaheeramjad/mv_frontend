@@ -22,6 +22,62 @@ const userReducer = createReducer(initialState, (builder) => {
     .addCase("clearErrors", (state) => {
       state.error = null;
     });
+
+  builder.addCase("UpdateUserInfoRequest", (state) => {
+    state.loading = true;
+  });
+  builder.addCase("UpdateUserInfoSuccess", (state, action) => {
+    state.loading = false;
+    state.user = action.payload;
+  });
+  builder.addCase("UpdateUserInfoFail", (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  // update user address
+  builder.addCase("updateUserAddressRequest", (state) => {
+    state.addressLoading = true;
+  });
+  builder.addCase("updateUserAddressSuccess", (state, action) => {
+    state.addressLoading = false;
+    state.successMessage = action.payload.successMessage;
+    state.user = action.payload.user;
+  });
+  builder.addCase("updateUserAddressFailed", (state, action) => {
+    state.addressLoading = false;
+    state.error = action.payload;
+  });
+
+  // delete user address
+  builder.addCase("deleteUserAddressRequest", (state) => {
+    state.addressLoading = true;
+  });
+  builder.addCase("deleteUserAddressSuccess", (state, action) => {
+    state.addressLoading = false;
+    state.successMessage = action.payload.successMessage;
+    state.user = action.payload.user;
+  });
+  builder.addCase("deleteUserAddressFailed", (state, action) => {
+    state.addressLoading = false;
+    state.error = action.payload;
+  });
+
+  // get all users --- admin
+  builder.addCase("getAllUsersRequest", (state) => {
+    state.usersLoading = true;
+  });
+  builder.addCase("getAllUsersSuccess", (state, action) => {
+    state.usersLoading = false;
+    state.users = action.payload;
+  });
+  builder.addCase("getAllUsersFailed", (state, action) => {
+    state.usersLoading = false;
+    state.error = action.payload;
+  });
+  builder.addCase("clearMessages", (state) => {
+    state.successMessage = null;
+  });
 });
 
 export default userReducer;
