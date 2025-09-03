@@ -29,6 +29,11 @@ import {
   ShopAllEvents,
   ShopAllCoupons,
   ShopPreviewPage,
+  ShopAllOrders,
+  ShopOrderDetails,
+  ShopWithDrawMoneyPage,
+  ShopAllRefunds,
+  ShopSettingsPage,
 } from "../src/routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -162,6 +167,22 @@ const App = () => {
             }
           />
           <Route
+            path="/dashboard-orders"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllOrders />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/order/:id"
+            element={
+              <SellerProtectedRoute>
+                <ShopOrderDetails />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
             path="/dashboard-create-event"
             element={
               <SellerProtectedRoute>
@@ -182,6 +203,31 @@ const App = () => {
             element={
               <SellerProtectedRoute>
                 <ShopAllCoupons />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-refunds"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllRefunds />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <SellerProtectedRoute>
+                <ShopSettingsPage />
+              </SellerProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute>
+                <ShopWithDrawMoneyPage />
               </SellerProtectedRoute>
             }
           />

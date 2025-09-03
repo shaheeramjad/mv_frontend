@@ -62,22 +62,6 @@ const userReducer = createReducer(initialState, (builder) => {
     state.addressLoading = false;
     state.error = action.payload;
   });
-
-  // get all users --- admin
-  builder.addCase("getAllUsersRequest", (state) => {
-    state.usersLoading = true;
-  });
-  builder.addCase("getAllUsersSuccess", (state, action) => {
-    state.usersLoading = false;
-    state.users = action.payload;
-  });
-  builder.addCase("getAllUsersFailed", (state, action) => {
-    state.usersLoading = false;
-    state.error = action.payload;
-  });
-  builder.addCase("clearMessages", (state) => {
-    state.successMessage = null;
-  });
 });
 
 export default userReducer;

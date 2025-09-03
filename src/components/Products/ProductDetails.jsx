@@ -13,6 +13,7 @@ import styles from "../../styles/style.js";
 import Ratings from "./Ratings";
 import axios from "axios";
 import { addToCartAsync } from "../../redux/actions/cart.js";
+import { toast } from "react-toastify";
 import {
   addToWishlistAsync,
   removeFromWishlistAsync,

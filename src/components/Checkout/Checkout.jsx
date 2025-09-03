@@ -175,7 +175,8 @@ const ShippingInfo = ({
             <label className="block pb-2">Full Name</label>
             <input
               type="text"
-              value={user && user.name}
+              value={user?.name || ""}
+              readOnly
               required
               className={`${styles.input} !w-[95%]`}
             />
@@ -184,7 +185,8 @@ const ShippingInfo = ({
             <label className="block pb-2">Email Address</label>
             <input
               type="email"
-              value={user && user.email}
+              value={user?.email || ""}
+              readOnly
               required
               className={`${styles.input}`}
             />
@@ -197,7 +199,8 @@ const ShippingInfo = ({
             <input
               type="number"
               required
-              value={user && user.phoneNumber}
+              readOnly
+              value={user?.phoneNumber || ""}
               className={`${styles.input} !w-[95%]`}
             />
           </div>
@@ -342,7 +345,7 @@ const CartData = ({
         <input
           type="text"
           className={`${styles.input} h-[40px] pl-2`}
-          placeholder="Coupoun code"
+          placeholder="Coupon code"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           required

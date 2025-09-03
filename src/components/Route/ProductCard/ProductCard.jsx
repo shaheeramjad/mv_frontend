@@ -14,6 +14,7 @@ import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 import Ratings from "../../Products/Ratings";
 import { backendUrl } from "../../../server.js";
 import { addToCartAsync } from "../../../redux/actions/cart.js";
+import { toast } from "react-toastify";
 import {
   addToWishlistAsync,
   removeFromWishlistAsync,
