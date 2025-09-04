@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import styles from "../../styles/style";
+import styles from "../../styles/style.js";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
@@ -20,20 +20,15 @@ const ShopCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("file", avatar);
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("address", address);
-    formData.append("zipCode", zipCode);
-    formData.append("phoneNumber", phoneNumber);
-
     axios
-      .post(`${server}/shop/create-shop`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      .post(`${server}/shop/create-shop`, {
+        name,
+        email,
+        password,
+        avatar,
+        zipCode,
+        address,
+        phoneNumber,
       })
       .then((res) => {
         toast.success(res.data.message);
@@ -41,40 +36,25 @@ const ShopCreate = () => {
         setEmail("");
         setPassword("");
         setAvatar();
-        setZipCode("");
+        setZipCode();
         setAddress("");
-        setPhoneNumber("");
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar();
-        setZipCode("");
-        setAddress("");
-        setPhoneNumber("");
+        setPhoneNumber();
       })
       .catch((error) => {
         toast.error(error.response.data.message);
       });
   };
 
-  // const handleFileInputChange = (e) => {
-  //   const reader = new FileReader();
-
-  //   reader.onload = () => {
-  //     if (reader.readyState === 2) {
-  //       setAvatar(reader.result);
-  //     }
-  //   };
-
-  //   reader.readAsDataURL(e.target.files[0]);
-  // };
-
   const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (
@@ -225,9 +205,7 @@ const ShopCreate = () => {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={
-                        avatar.url ? avatar.url : URL.createObjectURL(avatar)
-                      }
+                      src={avatar}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />

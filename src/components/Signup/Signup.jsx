@@ -1,11 +1,11 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import styles from "../../styles/style";
+import styles from "../../styles/style.js";
 import { Link } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
+import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -15,23 +15,22 @@ const Signup = () => {
   const [avatar, setAvatar] = useState(null);
 
   const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("file", avatar);
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-
     axios
-      .post(`${server}/user/create-user`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
+      .post(`${server}/user/create-user`, { name, email, password, avatar })
       .then((res) => {
         toast.success(res.data.message);
         setName("");
@@ -41,7 +40,6 @@ const Signup = () => {
       })
       .catch((error) => {
         toast.error(error.response.data.message);
-        console.log(error);
       });
   };
 
@@ -137,9 +135,7 @@ const Signup = () => {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={
-                        avatar.url ? avatar.url : URL.createObjectURL(avatar)
-                      }
+                      src={avatar}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />
