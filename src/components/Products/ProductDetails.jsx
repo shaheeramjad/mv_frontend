@@ -14,6 +14,7 @@ import Ratings from "./Ratings";
 import axios from "axios";
 import { addToCartAsync } from "../../redux/actions/cart.js";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 import {
   addToWishlistAsync,
   removeFromWishlistAsync,
@@ -255,6 +256,7 @@ const ProductDetailsInfo = ({
   averageRating,
 }) => {
   const [active, setActive] = useState(1);
+  const { isEvent } = useParams();
 
   return (
     <div className="bg-[#f5f6fb] px-3 md:px-10 py-2 rounded">
@@ -309,11 +311,14 @@ const ProductDetailsInfo = ({
 
       {active === 2 ? (
         <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data &&
+          {/* Only show reviews if it's NOT an event */}
+          {isEvent !== "true" &&
+            data?.reviews &&
+            data.reviews.length > 0 &&
             data.reviews.map((item, index) => (
-              <div className="w-full flex my-2">
+              <div key={index} className="w-full flex my-2">
                 <img
-                  src={`${item.user.avatar?.url}`}
+                  src={item.user.avatar?.url}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />
@@ -328,7 +333,7 @@ const ProductDetailsInfo = ({
             ))}
 
           <div className="w-full flex justify-center">
-            {data && data.reviews.length === 0 && (
+            {(isEvent === "true" || data?.reviews?.length === 0) && (
               <h5>No Reviews have for this product!</h5>
             )}
           </div>
