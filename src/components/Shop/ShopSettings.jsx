@@ -157,7 +157,7 @@ const ShopSettings = () => {
 
           <button
             type="submit"
-            className="bg-green-600 text-white py-2 px-6 rounded-md shadow hover:bg-green-700 transition mt-8"
+            className="bg-[#f05518] text-white py-2 px-6 rounded-md shadow hover:bg-[#f05518] transition mt-8 cursor-pointer"
           >
             Update Shop
           </button>

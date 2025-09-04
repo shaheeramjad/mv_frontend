@@ -198,14 +198,14 @@ export const categoriesData = [
   },
   {
     id: 2,
-    title: "cosmetics and body care",
+    title: "Cosmetics and Body Care",
     subTitle: "",
     image_Url:
       "https://indian-retailer.s3.ap-south-1.amazonaws.com/s3fs-public/2021-07/kosme1.png",
   },
   {
     id: 3,
-    title: "Accesories",
+    title: "Accessories",
     subTitle: "",
     image_Url:
       "https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories_335657-2345.jpg?w=2000",
@@ -229,13 +229,14 @@ export const categoriesData = [
     title: "Gifts",
     subTitle: "",
     image_Url:
-      "https://securecdn.pymnts.com/wp-content/uploads/2014/11/Gifts-Photo-700x489.jpg",
+      "https://static.vecteezy.com/system/resources/thumbnails/037/796/385/small_2x/ai-generated-red-gift-box-with-golden-bow-on-transparent-background-free-png.png",
   },
   {
     id: 7,
     title: "Pet Care",
     subTitle: "",
-    image_Url: "https://cdn.openpr.com/T/c/Tc15444071_g.jpg",
+    image_Url:
+      "https://cdni.iconscout.com/illustration/premium/thumb/pet-care-clinic-8369511-6632807.png",
   },
   {
     id: 8,

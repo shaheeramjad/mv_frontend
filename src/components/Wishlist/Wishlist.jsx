@@ -93,7 +93,7 @@ const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
 
         <div className="pl-[5px]">
           <h1>{data.name}</h1>
-          <h4 className="font-[600] pt-3 md:pt-[3px] text-[17px] text-[#d02222] font-Roboto">
+          <h4 className="font-[600] pt-3 md:pt-[3px] text-[17px] text-[#f05518] font-Roboto">
             US${totalPrice}
           </h4>
         </div>

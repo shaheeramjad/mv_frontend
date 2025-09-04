@@ -80,10 +80,10 @@ const DashboardSideBar = ({ active }) => {
             key={item.id}
             to={item.link}
             className={`flex items-center p-4 transition-colors ${
-              isActive ? "bg-crimson/10" : "hover:bg-gray-100"
+              isActive ? "#f05518" : "hover:bg-gray-100"
             }`}
           >
-            <Icon size={26} color={isActive ? "crimson" : "#555"} />
+            <Icon size={26} color={isActive ? "#f05518" : "#555"} />
             <h5
               className={`hidden md:block pl-2 text-[16px] font-medium ${
                 isActive ? "text-crimson" : "text-[#555]"

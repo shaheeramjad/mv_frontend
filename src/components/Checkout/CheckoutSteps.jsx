@@ -13,7 +13,7 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 1
-                ? "w-[30px] md:w-[70px] h-[4px] !bg-[#f63b60]"
+                ? "w-[30px] md:w-[70px] h-[4px] !bg-[#f05518]"
                 : "w-[30px] md:w-[70px] h-[4px] !bg-[#FDE1E6]"
             }`}
           />
@@ -31,7 +31,7 @@ const CheckoutSteps = ({ active }) => {
               className={`${
                 active > 1
                   ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} !text-[#f63b60]`
+                  : `${styles.cart_button_text} !text-[#f05518]`
               }`}
             >
               2.Payment
@@ -43,7 +43,7 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 3
-                ? "w-[30px] md:w-[70px] h-[4px] !bg-[#f63b60]"
+                ? "w-[30px] md:w-[70px] h-[4px] !bg-[#f05518]"
                 : "w-[30px] md:w-[70px] h-[4px] !bg-[#FDE1E6]"
             }`}
           />
@@ -58,7 +58,7 @@ const CheckoutSteps = ({ active }) => {
               className={`${
                 active > 2
                   ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} !text-[#f63b60]`
+                  : `${styles.cart_button_text} !text-[#f05518]`
               }`}
             >
               3.Success

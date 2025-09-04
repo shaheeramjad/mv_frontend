@@ -52,20 +52,19 @@ const CreateProduct = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newForm = new FormData();
+    const productData = {
+      name,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      stock,
+      images, // already base64
+      shopId: seller._id,
+    };
 
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
-    dispatch(createProduct(newForm));
+    dispatch(createProduct(productData));
   };
 
   return (

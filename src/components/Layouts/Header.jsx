@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { RxCross1 } from "react-icons/rx";
 import Cart from "../Cart/Cart.jsx";
 import Wishlist from "../Wishlist/Wishlist.jsx";
+import logo from "../../assets/logo.png";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -55,12 +56,9 @@ const Header = ({ activeHeading }) => {
     <>
       <div className={`${styles.section}`}>
         <div className="hidden md:h-[50px] md:my-[20px] md:flex items-center justify-between">
-          <div>
+          <div className="w-[175px]">
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt=""
-              />
+              <img src={logo} alt="" />
             </Link>
           </div>
           {/* search box */}
@@ -70,7 +68,7 @@ const Header = ({ activeHeading }) => {
               placeholder="Search Product..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+              className="h-[40px] w-full px-2 border-[#f05518] border-[2px] rounded-md"
             />
             <AiOutlineSearch
               size={30}
@@ -110,14 +108,14 @@ const Header = ({ activeHeading }) => {
       <div
         className={`${
           active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
-        } transition hidden md:flex items-center justify-between w-full bg-[#3321c8] h-[70px]`}
+        } transition hidden md:flex items-center justify-between w-full bg-[#f05518] h-[70px]`}
       >
         <div
           className={`${styles.section} relative ${styles.normalFlex} justify-between`}
         >
           {/* categories */}
           <div onClick={() => setDropDown(!dropDown)}>
-            <div className="relative h-[60px] mt-[10px] w-[270px] hidden lg:block">
+            <div className="relative h-[60px] mt-[10px] mb-[10px] w-[270px] hidden lg:block">
               <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
               <button
                 className={`h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md`}
@@ -214,13 +212,9 @@ const Header = ({ activeHeading }) => {
               onClick={() => setOpen(true)}
             />
           </div>
-          <div>
+          <div className="w-[175px]">
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt=""
-                className="mt-3 cursor-pointer"
-              />
+              <img src={logo} alt="" className="mt-3 cursor-pointer" />
             </Link>
           </div>
           <div>
