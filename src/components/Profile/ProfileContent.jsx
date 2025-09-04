@@ -7,7 +7,6 @@ import {
 import { MdTrackChanges } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "../../styles/style";
-import { backendUrl } from "../../server";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -34,27 +33,30 @@ const ProfileContent = ({ active }) => {
   const [avatar, setAvatar] = useState(null);
 
   const handleImage = async (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
 
-    const formData = new FormData();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        axios
+          .put(
+            `${server}/user/update-avatar`,
+            { avatar: reader.result },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            dispatch(loadUser());
+            toast.success("avatar updated successfully!");
+          })
+          .catch((error) => {
+            toast.error(error);
+          });
+      }
+    };
 
-    formData.append("image", e.target.files[0]);
-
-    await axios
-      .put(`${server}/user/update-avatar`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error);
-        console.log(error);
-      });
+    reader.readAsDataURL(e.target.files[0]);
   };
   useEffect(() => {
     if (error) {
@@ -79,7 +81,7 @@ const ProfileContent = ({ active }) => {
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${backendUrl}uploads/${user?.avatar?.url}`}
+                src={`${user?.avatar?.url}`}
                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                 alt=""
               />

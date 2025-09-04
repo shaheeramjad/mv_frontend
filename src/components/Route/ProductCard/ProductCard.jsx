@@ -12,7 +12,6 @@ import styles from "../../../styles/style.js";
 import { useDispatch, useSelector } from "react-redux";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 import Ratings from "../../Products/Ratings";
-import { backendUrl } from "../../../server.js";
 import { addToCartAsync } from "../../../redux/actions/cart.js";
 import { toast } from "react-toastify";
 import {
@@ -72,7 +71,7 @@ const ProductCard = ({ data, isEvent }) => {
           }`}
         >
           <img
-            src={`${backendUrl}${data.images && data.images[0]?.url}`}
+            src={`${data.images && data.images[0]?.url}`}
             alt=""
             className="w-full h-[170px] object-contain"
           />

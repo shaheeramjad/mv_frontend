@@ -32,25 +32,21 @@ const CreateProduct = () => {
     }
   }, [dispatch, error, success]);
 
-  // const handleImageChange = (e) => {
-  //   const files = Array.from(e.target.files);
-
-  //   setImages([]);
-
-  //   files.forEach((file) => {
-  //     const reader = new FileReader();
-
-  //     reader.onload = () => {
-  //       if (reader.readyState === 2) {
-  //         setImages((old) => [...old, reader.result]);
-  //       }
-  //     };
-  //     reader.readAsDataURL(file);
-  //   });
-  // };
-
   const handleImageChange = (e) => {
-    setImages([...e.target.files]); // save selected images
+    const files = Array.from(e.target.files);
+
+    setImages([]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImages((old) => [...old, reader.result]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleSubmit = (e) => {

@@ -1,17 +1,18 @@
 import React from "react";
 import { AiOutlineGift } from "react-icons/ai";
-import { MdOutlineLocalOffer } from "react-icons/md";
+import { BiMessageSquareDetail } from "react-icons/bi";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
+import { MdOutlineLocalOffer } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { BiMessageSquareDetail } from "react-icons/bi";
 
-const DashboardHeader = () => {
-  const { seller } = useSelector((state) => state.seller);
+const AdminHeader = () => {
+  const { user } = useSelector((state) => state.user);
+
   return (
     <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
       <div>
-        <Link to="/dashboard">
+        <Link to="/">
           <img
             src="https://shopo.quomodothemes.website/assets/images/logo.svg"
             alt=""
@@ -20,7 +21,7 @@ const DashboardHeader = () => {
       </div>
       <div className="flex items-center">
         <div className="flex items-center mr-4">
-          <Link to="/dashboard-coupons" className="md:block hidden">
+          <Link to="/dashboard/cupouns" className="md:block hidden">
             <AiOutlineGift
               color="#555"
               size={30}
@@ -51,17 +52,15 @@ const DashboardHeader = () => {
               className="mx-5 cursor-pointer"
             />
           </Link>
-          <Link to={`/shop/${seller._id}`}>
-            <img
-              src={`${seller.avatar.url}`}
-              alt=""
-              className="w-[50px] h-[50px] rounded-full object-cover"
-            />
-          </Link>
+          <img
+            src={`${user?.avatar?.url}`}
+            alt=""
+            className="w-[50px] h-[50px] rounded-full object-cover"
+          />
         </div>
       </div>
     </div>
   );
 };
 
-export default DashboardHeader;
+export default AdminHeader;

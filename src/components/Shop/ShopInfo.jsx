@@ -6,7 +6,6 @@ import styles from "../../styles/style.js";
 import Loader from "../Layouts/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
-import { backendUrl } from "../../server.js";
 
 const ShopInfo = ({ isOwner }) => {
   const [data, setData] = useState({});
@@ -60,7 +59,7 @@ const ShopInfo = ({ isOwner }) => {
           <div className="w-full py-5">
             <div className="w-full flex item-center justify-center">
               <img
-                src={`${backendUrl}uploads/${data.avatar?.url}`}
+                src={`${data.avatar?.url}`}
                 alt=""
                 className="w-[150px] h-[150px] object-cover rounded-full"
               />

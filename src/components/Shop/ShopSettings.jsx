@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { backendUrl, server } from "../../server";
+import { server } from "../../server";
 import { AiOutlineCamera } from "react-icons/ai";
 import styles from "../../styles/style.js";
 import axios from "axios";
@@ -71,7 +71,7 @@ const ShopSettings = () => {
         <div className="w-full flex items-center justify-center">
           <div className="relative">
             <img
-              src={avatar || `${backendUrl}uploads/${seller?.avatar?.url}`}
+              src={avatar || `${seller?.avatar?.url}`}
               alt="Shop Avatar"
               className="w-[200px] h-[200px] rounded-full cursor-pointer object-cover border shadow-md"
             />
